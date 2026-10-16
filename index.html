@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Chúc mừng 20-10 | Tập thể nam sinh 68-KTPM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Dancing+Script:wght@600;700&family=Pacifico&family=Playpen+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ===== MÀN HÌNH LỚN (laptop / PC): chỉ hiện thông báo + mã QR ===== -->
+<main class="gate" id="gate">
+  <div class="bg-photo"></div>
+  <div class="flowers"></div>
+  <div class="gate-card">
+    <div class="gate-text">
+      <p class="g-small">Chúc mừng ngày Quốc tế Phụ nữ</p>
+      <p class="g-big">20-10</p>
+      <p class="g-ask">Hãy dùng thiết bị di động quét mã này để mở</p>
+    </div>
+    <div class="qr-col">
+      <button class="qr-frame" id="qrBtn" type="button" aria-label="Bấm để phóng to mã QR">
+        <i class="qc c1">🌸</i><i class="qc c2">🌷</i><i class="qc c3">🌺</i><i class="qc c4">🌹</i>
+        <span class="qr-box">
+          <img src="Anhqrcholap.png" alt="Mã QR mở thiệp 20-10" id="qrImg">
+          <em class="qr-missing">Chưa có ảnh<br>Anhqrcholap.png</em>
+          <span class="scan"></span>
+        </span>
+      </button>
+      <p class="g-tip">Bấm vào mã để phóng to cho dễ quét</p>
+    </div>
+  </div>
+</main>
+<div class="lightbox" id="lightbox" hidden><img src="Anhqrcholap.png" alt="Mã QR phóng to"></div>
+
+<!-- ===== PHẦN 1: Lá thư ===== -->
+<section class="scene active" id="scene-letter">
+  <div class="bg-photo"></div>
+  <div class="flowers"></div>
+  <div class="halo"></div>
+  <div class="sparkles" id="sparkles"></div>
+  <div class="env-wrap" id="envWrap">
+    <div class="envelope" id="envelope">
+      <div class="env-back"></div>
+      <div class="paper">
+        <i class="corner tl">🌸</i><i class="corner tr">🌷</i>
+        <p class="paper-small">Chúc ngày Quốc tế Phụ nữ Việt Nam</p>
+        <p class="orn">❀ ✦ ❀</p>
+        <p class="paper-big">20-10</p>
+      </div>
+      <svg class="env-front" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffb3cd"/><stop offset="1" stop-color="#f06d9a"/></linearGradient></defs>
+        <path d="M0 20 C0 11 7 8 13 13 L50 48 L87 13 C93 8 100 11 100 20 L100 90 Q100 100 90 100 L10 100 Q0 100 0 90 Z" fill="url(#g)" stroke="rgba(255,255,255,.75)" stroke-width="1.2" vector-effect="non-scaling-stroke"/>
+        <path d="M5 26 L5 88 Q5 95 12 95 L88 95 Q95 95 95 88 L95 26" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="1" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"/>
+      </svg>
+      <div class="seal">💗</div>
+      <button class="btn-main" id="openBtn" type="button"><span>🌸</span> Bấm vào đây <span>🌸</span></button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PHẦN 2a: Chọn họ tên ===== -->
+<section class="scene" id="scene-name">
+  <div class="bg-photo soft"></div>
+  <div class="flowers"></div>
+  <div class="card">
+    <h2 class="script">Mong các bạn nữ xem hết nhé 🌸</h2>
+    <p class="hint">Chọn họ và tên của bạn trong danh sách nhé</p>
+    <div class="name-list" id="nameList" role="listbox" aria-label="Danh sách họ và tên"></div>
+    <button class="btn-main" id="nextBtn" type="button" disabled>Tiếp tục</button>
+  </div>
+</section>
+
+<!-- ===== PHẦN 2b: Mở thư, viết lời chúc ===== -->
+<section class="scene" id="scene-wish">
+  <div class="bg-photo soft"></div>
+  <div class="flowers"></div>
+  <div class="wish-stage">
+    <div class="mini-env" id="miniEnv">
+      <div class="me-back"></div>
+      <div class="me-flap"></div>
+      <div class="me-front"></div>
+      <span class="me-heart">💗</span>
+    </div>
+    <div class="card card-wish" id="wishCard">
+      <h2 class="wish-head" id="wishHead"></h2>
+      <p class="wish-text" id="wishText"></p>
+      <p class="signature" id="signature">— Tập thể nam sinh 68-KTPM<br>khoa Công Nghệ Thông Tin</p>
+      <div class="after" id="afterWish" hidden>
+        <button class="btn-main" id="moreBtn" type="button">Xem tiếp</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PHẦN 3: Vũ trụ ===== -->
+<section class="scene" id="scene-magic">
+  <div class="nebula"></div>
+  <div class="milky"></div>
+  <div class="stars" id="stars"></div>
+  <i class="shoot s1"></i><i class="shoot s2"></i><i class="shoot s3"></i>
+  <div class="rain" id="rain"></div>
+  <div class="finale" id="finale">
+    <h1>Tập thể nam sinh 68-KTPM<br>chúc các bạn nữ 20-10</h1>
+    <p>luôn rạng rỡ như hoa, bình yên như gió và hạnh phúc theo cách của riêng mình.</p>
+  </div>
+  <div class="iris"></div>
+  <div class="dark"></div>
+  <div class="bye">
+    <div class="bye-flower">🌸</div>
+    <p class="script">Hẹn gặp lại bạn nhé</p>
+    <button class="btn-main small" id="replayBtn" type="button">Xem lại từ đầu</button>
+  </div>
+</section>
+
+<!-- ===== NHẠC NỀN ===== -->
+<audio id="bgm" preload="auto"></audio>
+<div class="player" id="player">
+  <button class="pl-fab" id="plFab" type="button" aria-label="Mở trình phát nhạc" aria-expanded="false">
+    <span class="disc"></span>
+    <span class="eq" aria-hidden="true"><b></b><b></b><b></b><b></b></span>
+  </button>
+  <div class="pl-panel" id="plPanel" hidden>
+    <div class="pl-now">
+      <span class="disc big"></span>
+      <div class="pl-meta"><strong id="plTitle">Bài nền 1</strong><small id="plSub">Nhạc nền</small></div>
+    </div>
+    <div class="pl-bar" id="plBar" role="slider" aria-label="Tiến trình bài hát"><span id="plFill"></span></div>
+    <div class="pl-times"><span id="plCur">0:00</span><span id="plDur">0:00</span></div>
+    <div class="pl-ctrl">
+      <button type="button" id="plPrev" aria-label="Bài trước"><svg viewBox="0 0 24 24"><path d="M6 5h2v14H6zM20 5v14L9 12z"/></svg></button>
+      <button type="button" id="plPlay" class="main" aria-label="Phát hoặc tạm dừng">
+        <svg class="i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        <svg class="i-pause" viewBox="0 0 24 24"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+      </button>
+      <button type="button" id="plNext" aria-label="Bài sau"><svg viewBox="0 0 24 24"><path d="M16 5h2v14h-2zM4 5v14l11-7z"/></svg></button>
+    </div>
+    <ul class="pl-list" id="plList"></ul>
+  </div>
+</div>
+
+<div class="veil" id="veil"></div>
+<canvas id="fx"></canvas>
+<script src="script.js"></script>
+</body>
+</html>
