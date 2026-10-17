@@ -173,23 +173,26 @@ function celebrate(times = 1) {
 
 /* ========== CHUYỂN CẢNH: sương hồng mờ + cánh hoa bay ========== */
 const veil = $('#veil');
-for (let i = 0; i < 14; i++) {
+for (let i = 0; i < 25; i++) {
   const p = document.createElement('i');
   p.textContent = pick(FLOWERS);
-  p.style.cssText = `left:${rand(0, 95)}%;--x:${rand(-120, 120)}px;--r:${rand(-300, 300)}deg;animation-delay:${rand(0, .5)}s`;
+  p.style.cssText = `left:${rand(0, 95)}%;--x:${rand(-120, 120)}px;--r:${rand(-300, 300)}deg;animation-delay:${rand(0,.9)}s`;
   veil.appendChild(p);
 }
 async function goTo(id) {
+  document.body.classList.add('is-trans');
   veil.classList.add('in');
-  await sleep(700);
+  await sleep(1500);                       // sương phủ kín rồi mới đổi cảnh
   document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
   const next = $(id); next.classList.add('active'); next.scrollTop = 0;
-  await sleep(120);
+  await sleep(580);                        // giữ sương một nhịp rồi tan chậm
   veil.classList.remove('in');
+  setTimeout(() => document.body.classList.remove('is-trans'), 1300);
 }
 
 /* ========== PHẦN 1: MỞ THƯ ========== */
 $('#openBtn').addEventListener('click', async () => {
+  $('#visits').classList.add('hide'); $('#vDebug')?.remove();   // bộ đếm chỉ hiện ở màn đầu
   $('#envelope').classList.add('opening');
   celebrate(2);
   await sleep(2200);                 // thư mở chầm chậm ~2s
@@ -430,14 +433,15 @@ $('#openBtn').addEventListener('click', () => document.querySelectorAll('.heartf
   if (IS_DESKTOP) return;                                  // màn hình lớn chỉ hiện mã QR, không tính
 
   const KEY = 'ktpm68-20-10-2026';
+  const ROUND = '1';   // đổi sang '2', '3'... để mọi thiết bị đã xem trước đó được tính lại sau khi reset
   const PROVIDERS = [   // thử lần lượt, dịch vụ nào trả lời trước thì dùng
-    { name: 'counterapi', up: `https://api.counterapi.dev/v1/${KEY}/luot-ghe-tham/up`, get: `https://api.counterapi.dev/v1/${KEY}/luot-ghe-tham`,
+    { name: 'counterapi', up: `https://api.counterapi.dev/v1/${KEY}/luot-ghe-tham/up`, get: `https://api.counterapi.dev/v1/${KEY}/luot-ghe-tham`, set: `https://api.counterapi.dev/v1/${KEY}/luot-ghe-tham/set?count=0`,
       read: d => d.count ?? d.Count ?? d.value ?? d.data?.up_count },
-    { name: 'countapi', up: `https://countapi.mileshilliard.com/api/v1/hit/${KEY}-luot-ghe-tham`, get: `https://countapi.mileshilliard.com/api/v1/get/${KEY}-luot-ghe-tham`,
+    { name: 'countapi', up: `https://countapi.mileshilliard.com/api/v1/hit/${KEY}-luot-ghe-tham`, get: `https://countapi.mileshilliard.com/api/v1/get/${KEY}-luot-ghe-tham`, set: `https://countapi.mileshilliard.com/api/v1/set/${KEY}-luot-ghe-tham?value=0`,
       read: d => d.value ?? d.count ?? d.Count }
   ];
   const owner = store.get('tl_owner') === '1';
-  const counted = store.get('tl_counted') === '1';
+  const counted = store.get('tl_counted') === ROUND;
   const el = $('#vCount'), box = $('#visits');
   const debug = q.get('debug') === '1';
   const log = msg => { if (!debug) return; let d = $('#vDebug'); if (!d) { d = document.createElement('div'); d.id = 'vDebug'; d.className = 'v-debug'; document.body.appendChild(d); } d.textContent += msg + ' | '; };
@@ -466,13 +470,22 @@ $('#openBtn').addEventListener('click', () => document.querySelectorAll('.heartf
       return n;
     } finally { clearTimeout(tm); }
   }
+  /* Chủ web: bấm vào 👑 để đặt lại bộ đếm về 0 */
+  $('#vOwner').addEventListener('click', async () => {
+    if (!confirm('Đặt lại bộ đếm lượt truy cập về 0?')) return;
+    let ok = 0;
+    for (const p of PROVIDERS) { try { const r = await fetch(p.set, { cache: 'no-store' }); if (r.ok) ok++; } catch {} }
+    store.del('tl_last');
+    el.textContent = ok ? '0' : '—';
+    alert(ok ? 'Đã đặt lại về 0.' : 'Không đặt lại được (dịch vụ đếm không phản hồi). Thử lại sau nhé.');
+  });
   (async () => {
     const countIt = !owner && !counted;                  // chỉ người khác, lần đầu mới +1
     for (const p of PROVIDERS) {
       try {
         const n = await ask(p, countIt);
         log(`${p.name} OK ${n}`);
-        if (countIt) store.set('tl_counted', '1');
+        if (countIt) store.set('tl_counted', ROUND);
         return show(n);
       } catch (e) { log(`${p.name} loi: ${e.message}`); }
     }
