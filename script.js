@@ -429,12 +429,21 @@ $('#openBtn').addEventListener('click', () => document.querySelectorAll('.heartf
   if (q.get('admin') === '0') store.del('tl_owner');
   if (IS_DESKTOP) return;                                  // màn hình lớn chỉ hiện mã QR, không tính
 
-  const BASE = 'https://api.counterapi.dev/v1/ktpm68-20-10-2026/luot-ghe-tham';
+  const KEY = 'ktpm68-20-10-2026';
+  const PROVIDERS = [   // thử lần lượt, dịch vụ nào trả lời trước thì dùng
+    { name: 'counterapi', up: `https://api.counterapi.dev/v1/${KEY}/luot-ghe-tham/up`, get: `https://api.counterapi.dev/v1/${KEY}/luot-ghe-tham`,
+      read: d => d.count ?? d.Count ?? d.value ?? d.data?.up_count },
+    { name: 'countapi', up: `https://countapi.mileshilliard.com/api/v1/hit/${KEY}-luot-ghe-tham`, get: `https://countapi.mileshilliard.com/api/v1/get/${KEY}-luot-ghe-tham`,
+      read: d => d.value ?? d.count ?? d.Count }
+  ];
   const owner = store.get('tl_owner') === '1';
   const counted = store.get('tl_counted') === '1';
   const el = $('#vCount'), box = $('#visits');
+  const debug = q.get('debug') === '1';
+  const log = msg => { if (!debug) return; let d = $('#vDebug'); if (!d) { d = document.createElement('div'); d.id = 'vDebug'; d.className = 'v-debug'; document.body.appendChild(d); } d.textContent += msg + ' | '; };
   el.classList.add('load');
   if (owner) $('#vOwner').hidden = false;
+  log(`owner=${owner} counted=${counted}`);
 
   function show(n) {
     el.classList.remove('load');
@@ -447,14 +456,28 @@ $('#openBtn').addEventListener('click', () => document.querySelectorAll('.heartf
       if (p < 1) requestAnimationFrame(step); else { box.classList.add('pop'); }
     })(t0);
   }
-  const countThis = !owner && !counted;                    // chỉ người khác, lần đầu mới +1
-  fetch(countThis ? BASE + '/up' : BASE, { cache: 'no-store' })
-    .then(r => { if (!r.ok) throw 0; return r.json(); })
-    .then(d => {
-      if (countThis) store.set('tl_counted', '1');
-      show(Number(d.count ?? d.Count ?? d.value));
-    })
-    .catch(() => show(NaN));
+  async function ask(p, countIt) {
+    const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), 7000);
+    try {
+      const r = await fetch(countIt ? p.up : p.get, { cache: 'no-store', signal: ctl.signal });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const n = Number(p.read(await r.json()));
+      if (!Number.isFinite(n)) throw new Error('khong doc duoc so');
+      return n;
+    } finally { clearTimeout(tm); }
+  }
+  (async () => {
+    const countIt = !owner && !counted;                  // chỉ người khác, lần đầu mới +1
+    for (const p of PROVIDERS) {
+      try {
+        const n = await ask(p, countIt);
+        log(`${p.name} OK ${n}`);
+        if (countIt) store.set('tl_counted', '1');
+        return show(n);
+      } catch (e) { log(`${p.name} loi: ${e.message}`); }
+    }
+    show(NaN);
+  })();
 })();
 
 fitEnvelope(); layoutFlowers();

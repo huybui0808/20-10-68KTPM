@@ -316,3 +316,5 @@ textarea:focus{border-color:var(--rose);box-shadow:0 0 0 4px rgba(232,82,127,.2)
 .visits.pop{animation:vpop .6s cubic-bezier(.2,.9,.25,1.4)}
 @keyframes vpop{40%{transform:scale(1.08)}}
 .v-owner{font-size:.85rem;margin-left:-2px}
+
+.v-debug{position:fixed;z-index:70;left:12px;top:calc(max(12px,env(safe-area-inset-top)) + 54px);max-width:calc(100vw - 24px);padding:6px 10px;border-radius:10px;background:rgba(0,0,0,.75);color:#fff;font:11px/1.4 monospace;word-break:break-all}
