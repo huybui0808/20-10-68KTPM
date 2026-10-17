@@ -76,7 +76,8 @@ const WISH_PARTS = [
 const SHORT_WISHES = [
   'Luôn xinh đẹp ✿', 'Mãi tươi trẻ ✿', 'Hạnh phúc nhé ✿', 'Nụ cười rạng rỡ ✿',
   'Bình yên mỗi ngày ✿', 'Được yêu thương ✿', 'Thành công rực rỡ ✿', 'Khỏe mạnh, vui vẻ ✿',
-  'Tỏa sáng nhé ✿', 'Ngọt ngào như hoa ✿', 'Chúc mừng 20-10 ✿', 'Mãi là cô gái tuyệt vời ✿'
+  '✿ Tỏa sáng nhé ✿', 'Ngọt ngào như hoa ✿', 'Chúc mừng 20-10 ✿', 'Mãi là cô gái tuyệt vời ✿',
+'Đạt GPA 3.6 🙃','sớm có bồ','Được tôn vinh'
 ];
 
 
@@ -359,10 +360,10 @@ $('#openBtn').addEventListener('click', () => document.querySelectorAll('.heartf
 (function music() {
   if (IS_DESKTOP) return;
   const TRACKS = [
-    { src: 'nhacnen/bainen1.mp3', title: 'Bài nền 1', tag: 'Mặc định' },
-    { src: 'nhacnen/bainen2.mp3', title: 'Bài nền 2' },
-    { src: 'nhacnen/bainen3.mp3', title: 'Bài nền 3' },
-    { src: 'nhacnen/bainen4.mp3', title: 'Bài nền 4' }
+    { src: 'nhacnen/bainen3.mp3', title: 'Nhạc piano ' },
+    { src: 'nhacnen/bainen2.mp3', title: 'Nhạc kỷ niệm' },
+    { src: 'nhacnen/bainen1.mp3', title: 'Nhạc nhẹ nhàng' },
+    { src: 'nhacnen/bainen4.mp3', title: 'Nhạc chill' }
   ];
   const au = $('#bgm'), pl = $('#player'), panel = $('#plPanel'), fab = $('#plFab');
   let cur = 0, userPaused = false;
