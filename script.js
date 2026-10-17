@@ -356,10 +356,10 @@ $('#openBtn').addEventListener('click', () => document.querySelectorAll('.heartf
 (function music() {
   if (IS_DESKTOP) return;
   const TRACKS = [
-    { src: 'nhacnen/bainen1.mp3', title: 'Bài nền 1', tag: 'Mặc định' },
-    { src: 'nhacnen/bainen2.mp3', title: 'Bài nền 2' },
-    { src: 'nhacnen/bainen3.mp3', title: 'Bài nền 3' },
-    { src: 'nhacnen/bainen4.mp3', title: 'Bài nền 4' }
+    { src: 'nhacnen/bainen1.mp3', title: 'Nhạc nhẹ nhàng' },
+    { src: 'nhacnen/bainen2.mp3', title: 'Nhạc thanh xuân ' },
+    { src: 'nhacnen/bainen3.mp3', title: 'Nhạc piano' },
+    { src: 'nhacnen/bainen4.mp3', title: 'Nhạc chill' }
   ];
   const au = $('#bgm'), pl = $('#player'), panel = $('#plPanel'), fab = $('#plFab');
   let cur = 0, userPaused = false;

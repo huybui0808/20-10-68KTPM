@@ -4,7 +4,7 @@
   --f-hand:'Playpen Sans',cursive; --f-ui:'Be Vietnam Pro',system-ui,sans-serif; --s:1;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;overflow:hidden;background:#2a0f1e;font-family:var(--f-ui);color:var(--wine)}
+html,body{ width: 100;height:100%;overflow:hidden;background:#2a0f1e;font-family:var(--f-ui);color:var(--wine)}
 
 /* Mỗi cảnh cuộn riêng được -> không bị cắt trên màn hình nhỏ */
 .scene{position:fixed;inset:0;display:none;overflow-x:hidden;overflow-y:auto;padding:16px;
@@ -98,7 +98,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px soli
 /* Lời chúc */
 .w{display:inline-block;opacity:0;transform:translateY(8px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.8,.2,1)}
 .w.on{opacity:1;transform:none}
-  clip-path:inset(0 100% 0 0);transition:clip-path 2.2s cubic-bezier(.4,0,.2,1)}
+ /* clip-path:inset(0 100% 0 0);transition:clip-path 2.2s cubic-bezier(.4,0,.2,1)}*/
 .after{display:none;width:100%;justify-content:center}
 .after[hidden]{display:none!important}
 .after.show{display:flex;animation:fadeUp .9s ease both}
@@ -154,11 +154,11 @@ textarea:focus{border-color:var(--rose);box-shadow:0 0 0 4px rgba(232,82,127,.2)
 .finale p{font-family:var(--f-script);font-weight:600;font-size:clamp(1.3rem,4.5vw,2rem);color:#ffd9ec;margin-top:18px}
 
 /* Khép màn kiểu "iris": vòng sáng thu nhỏ dần về giữa rồi tối hẳn, hiện hoa */
-.iris{position:fixed;left:50%;top:50%;z-index:6;pointer-events:none;width:160vmax;height:160vmax;margin:-80vmax 0 0 -80vmax;
+.irish{position:fixed;left:50%;top:50%;z-index:6;pointer-events:none;width:160vmax;height:160vmax;margin:-80vmax 0 0 -80vmax;
   border-radius:50%;transform:scale(1.5);will-change:transform;
   box-shadow:0 0 0 400vmax #05020d,inset 0 0 80px 10px rgba(255,150,205,.45)}
 .dark{position:fixed;inset:0;z-index:7;background:#05020d;opacity:0;pointer-events:none}
-.closing .iris{transform:scale(0);transition:transform 3.4s cubic-bezier(.6,0,.35,1)}
+.closingh .iris{transform:scale(0);transition:transform 3.4s cubic-bezier(.6,0,.35,1)}
 .closing .dark{opacity:1;transition:opacity 1.2s ease 2.4s}
 .bye{position:fixed;inset:0;z-index:8;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;
   opacity:0;pointer-events:none;transition:opacity 1.6s ease 3.2s}
@@ -324,3 +324,5 @@ textarea:focus{border-color:var(--rose);box-shadow:0 0 0 4px rgba(232,82,127,.2)
 
 /* Tạm dừng hiệu ứng nền khi đang chuyển cảnh để chuyển mượt, không lag */
 .is-trans .flower,.is-trans .halo,.is-trans .sp,.is-trans .heartfloat,.is-trans .nebula,.is-trans .star,.is-trans .shoot{animation-play-state:paused!important}
+#camon{ font: 22px ;
+      color: white ;}
