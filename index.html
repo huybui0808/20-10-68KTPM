@@ -7,9 +7,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Dancing+Script:wght@600;700&family=Pacifico&family=Playpen+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=6">
+<link rel="stylesheet" href="style.css?v=12">
 </head>
-<body>
+<body class="locked">
 
 <!-- ===== MÀN HÌNH LỚN (laptop / PC): chỉ hiện thông báo + mã QR ===== -->
 <main class="gate" id="gate">
@@ -37,7 +37,34 @@
 <div class="lightbox" id="lightbox" hidden><img src="Anhqrcholap.png" alt="Mã QR phóng to"></div>
 
 <!-- ===== PHẦN 1: Lá thư ===== -->
-<section class="scene active" id="scene-letter">
+<!-- ===== MÀN MỞ KHÓA: nhấn giữ vân tay ===== -->
+<section class="scene active" id="scene-lock">
+  <div class="lock-base"></div>
+  <div class="bg-photo lock-photo"></div>
+  <div class="lock-box" id="lockBox">
+    <p class="lock-title">Chạm giữ để mở thiệp</p>
+    <p class="lock-sub">Đặt ngón tay vào vòng tròn và giữ trong vài giây</p>
+    <button class="finger" id="lockBtn" type="button" aria-label="Nhấn giữ để mở khóa">
+      <svg class="ring" viewBox="0 0 200 200" aria-hidden="true">
+        <circle class="ring-bg" cx="100" cy="100" r="92"/>
+        <circle class="ring-fg" id="lockRing" cx="100" cy="100" r="92"/>
+      </svg>
+      <svg class="fp" viewBox="0 0 64 64" aria-hidden="true">
+        <path d="M32 8c-13 0-22 9-22 21v6"/><path d="M32 14c-9 0-16 6-16 15v10c0 4-1 8-3 11"/>
+        <path d="M32 20c-5.500 0-10 4-10 10v8c0 6-1 11-4 16"/><path d="M32 26c-2.500 0-4 2-4 4.500V40c0 7-1 12-3.500 17"/>
+        <path d="M32 26c2.500 0 4 2 4 4.500V38c0 8-2 14-5 19"/><path d="M40 22c3 1.500 5 4.500 5 8.500V38c0 7-1 12-3 17"/>
+        <path d="M32 8c13 0 22 9 22 21v9c0 5-1 9-3 13"/><path d="M32 14c9 0 16 6 16 15v8"/>
+      </svg>
+      <span class="sweep"></span>
+    </button>
+    <div class="lock-info">
+      <p class="lock-pct"><b id="lockPct">0%</b><small>HOÀN THÀNH</small></p>
+      <p class="lock-msg" id="lockMsg" role="status">Sẵn sàng quét vân tay</p>
+    </div>
+  </div>
+</section>
+
+<section class="scene" id="scene-letter">
   <div class="bg-photo"></div>
   <div class="flowers"></div>
   <div class="halo"></div>
@@ -57,7 +84,7 @@
         <path d="M5 26 L5 88 Q5 95 12 95 L88 95 Q95 95 95 88 L95 26" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="1" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"/>
       </svg>
       <div class="seal">💗</div>
-      <button class="btn-main" id="openBtn" type="button"><span>🌸</span> Bắt đầu <span>🌸</span></button>
+      <button class="btn-main" id="openBtn" type="button"><span>🌸</span> Bấm vào đây <span>🌸</span></button>
     </div>
   </div>
 </section>
@@ -111,8 +138,7 @@
   <div class="dark"></div>
   <div class="bye">
     <div class="bye-flower">🌸</div>
-    <p class="script">🔥Hẹn gặp lại bạn nhé🔥
-    <p id="camon">Chân thành cảm ơn các bạn đã xem hết </p></p>
+    <p class="script">Hẹn gặp lại bạn nhé</p>
     <button class="btn-main small" id="replayBtn" type="button">Xem lại từ đầu</button>
   </div>
 </section>
@@ -152,6 +178,6 @@
 
 <div class="veil" id="veil"></div>
 <canvas id="fx"></canvas>
-<script src="script.js?v=6"></script>
+<script src="script.js?v=12"></script>
 </body>
 </html>

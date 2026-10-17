@@ -3,7 +3,7 @@ const $ = s => document.querySelector(s);
 const rand = (a, b) => Math.random() * (b - a) + a;
 const pick = arr => arr[Math.floor(Math.random() * arr.length)];
 const sleep = ms => new Promise(r => setTimeout(r, ms));
-const FLOWERS = ['🌸', '🌷', '🌹', '🌺', '🪷', '💐', '🌼'];
+const FLOWERS = ['🌸', '🌷', '🌹', '🌺', '🪷', '💐', '🌼','🍀'];
 const DESKTOP_Q = '(min-width:1025px) and (hover:hover) and (pointer:fine)';
 const IS_DESKTOP = matchMedia(DESKTOP_Q).matches;
 matchMedia(DESKTOP_Q).addEventListener('change', () => location.reload());
@@ -173,19 +173,19 @@ function celebrate(times = 1) {
 
 /* ========== CHUYỂN CẢNH: sương hồng mờ + cánh hoa bay ========== */
 const veil = $('#veil');
-for (let i = 0; i < 25; i++) {
+for (let i = 0; i < 30; i++) {
   const p = document.createElement('i');
   p.textContent = pick(FLOWERS);
-  p.style.cssText = `left:${rand(0, 95)}%;--x:${rand(-120, 120)}px;--r:${rand(-300, 300)}deg;animation-delay:${rand(0,.9)}s`;
+  p.style.cssText = `left:${rand(0, 95)}%;--x:${rand(-120, 120)}px;--r:${rand(-300, 300)}deg;animation-delay:${rand(0, 1.2)}s`;
   veil.appendChild(p);
 }
 async function goTo(id) {
   document.body.classList.add('is-trans');
   veil.classList.add('in');
-  await sleep(1500);                       // sương phủ kín rồi mới đổi cảnh
+  await sleep(1800);                       // sương phủ kín rồi mới đổi cảnh
   document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
   const next = $(id); next.classList.add('active'); next.scrollTop = 0;
-  await sleep(580);                        // giữ sương một nhịp rồi tan chậm
+  await sleep(750);                        // giữ sương một nhịp rồi tan chậm
   veil.classList.remove('in');
   setTimeout(() => document.body.classList.remove('is-trans'), 1300);
 }
@@ -195,7 +195,7 @@ $('#openBtn').addEventListener('click', async () => {
   $('#visits').classList.add('hide'); $('#vDebug')?.remove();   // bộ đếm chỉ hiện ở màn đầu
   $('#envelope').classList.add('opening');
   celebrate(2);
-  await sleep(2200);                 // thư mở chầm chậm ~2s
+  await sleep(2700);                 // thư mở chầm chậm ~2s
   await goTo('#scene-name');
 });
 
@@ -332,14 +332,17 @@ $('#replayBtn').addEventListener('click', () => location.reload());
     s.style.cssText = `left:${rand(2, 96)}%;top:${rand(4, 94)}%;font-style:normal;font-size:${rand(10, 22)}px;--d:${rand(2, 4)}s;--dl:${rand(0, 4)}s`;
     sp.appendChild(s);
   }
+})();
+window.playMusicNow = window.playMusicNow || (() => {});
+function startLetterExtras() {            // chạy sau khi mở khóa xong
   for (let i = 0; i < 6; i++) {
     const h = document.createElement('div');
     h.className = 'heartfloat'; h.textContent = pick(['💗', '💖', '🌸']);
     h.style.cssText = `left:${rand(18, 80)}%;--x:${rand(-40, 40)}px;animation-delay:${3 + i * .9}s`;
-    document.body.appendChild(h); h.dataset.h = 1;
+    document.body.appendChild(h);
   }
   setTimeout(() => $('#envelope').classList.add('ready'), 3500);
-})();
+}
 addEventListener('animationend', e => { if (e.target.classList?.contains('heartfloat')) e.target.remove(); });
 $('#openBtn').addEventListener('click', () => document.querySelectorAll('.heartfloat').forEach(h => h.remove()));
 
@@ -356,10 +359,10 @@ $('#openBtn').addEventListener('click', () => document.querySelectorAll('.heartf
 (function music() {
   if (IS_DESKTOP) return;
   const TRACKS = [
-    { src: 'nhacnen/bainen1.mp3', title: 'Nhạc nhẹ nhàng' },
-    { src: 'nhacnen/bainen2.mp3', title: 'Nhạc thanh xuân ' },
-    { src: 'nhacnen/bainen3.mp3', title: 'Nhạc piano' },
-    { src: 'nhacnen/bainen4.mp3', title: 'Nhạc chill' }
+    { src: 'nhacnen/bainen1.mp3', title: 'Bài nền 1', tag: 'Mặc định' },
+    { src: 'nhacnen/bainen2.mp3', title: 'Bài nền 2' },
+    { src: 'nhacnen/bainen3.mp3', title: 'Bài nền 3' },
+    { src: 'nhacnen/bainen4.mp3', title: 'Bài nền 4' }
   ];
   const au = $('#bgm'), pl = $('#player'), panel = $('#plPanel'), fab = $('#plFab');
   let cur = 0, userPaused = false;
@@ -382,9 +385,13 @@ $('#openBtn').addEventListener('click', () => document.querySelectorAll('.heartf
     $('#plFill').style.width = '0'; $('#plCur').textContent = '0:00';
   }
   const play = () => au.play().then(() => true).catch(() => false);
+  window.playMusicNow = () => { if (!userPaused && au.paused) play(); };
 
+  const hint = document.createElement('div');
+  hint.className = 'pl-hint'; hint.textContent = '🎵 Chạm vào màn hình để bật nhạc';
+  hint.hidden = true; pl.appendChild(hint);
   load(0);
-  play();                                           // thử phát ngay khi vào trang
+  play().then(ok => { if (!ok) hint.hidden = false; });   // thử phát ngay khi vào trang; bị chặn thì nhắc nhẹ
   const unlock = async () => {                      // trình duyệt chặn tự phát -> phát ở lần chạm đầu tiên
     if (userPaused || !au.paused) return cleanup();
     if (await play()) cleanup();
@@ -393,7 +400,7 @@ $('#openBtn').addEventListener('click', () => document.querySelectorAll('.heartf
   const cleanup = () => evs.forEach(e => removeEventListener(e, unlock, true));
   evs.forEach(e => addEventListener(e, unlock, true));
 
-  au.addEventListener('play', () => pl.classList.add('playing'));
+  au.addEventListener('play', () => { pl.classList.add('playing'); hint.hidden = true; });
   au.addEventListener('pause', () => pl.classList.remove('playing'));
   au.addEventListener('ended', () => { load(cur + 1); play(); });
   au.addEventListener('loadedmetadata', () => $('#plDur').textContent = fmt(au.duration));
@@ -494,3 +501,101 @@ $('#openBtn').addEventListener('click', () => document.querySelectorAll('.heartf
 })();
 
 fitEnvelope(); layoutFlowers();
+
+/* ========== MÀN MỞ KHÓA VÂN TAY: giữ ~2,5 giây, có % và rung ========== */
+(function fingerprintLock() {
+  const scene = $('#scene-lock');
+  if (IS_DESKTOP) return;
+  const box = $('#lockBox'), btn = $('#lockBtn'), ring = $('#lockRing'), pct = $('#lockPct'), msg = $('#lockMsg');
+  const HOLD = 2500, C = 578;
+  let holding = false, done = false, raf = 0, t0 = 0, p = 0, resetT = 0, pendingOk = false;
+
+  /* rung: Android/Chrome dùng navigator.vibrate; iPhone không hỗ trợ nên thử mẹo công tắc (có thể không rung) */
+  const sw = document.createElement('label');
+  sw.style.cssText = 'position:fixed;left:-99px;top:-99px;opacity:0;pointer-events:none';
+  sw.innerHTML = '<input type="checkbox" switch>'; document.body.appendChild(sw);
+  const vib = pat => {
+    try { if (navigator.vibrate) return navigator.vibrate(pat); sw.click(); return true; } catch { return false; }
+  };
+
+  const setP = v => { p = v; ring.style.strokeDashoffset = C * (1 - v); pct.textContent = Math.round(v * 100) + '%'; scene.style.setProperty('--p', v); };
+  const state = s => { box.classList.remove('fail', 'ok'); if (s) box.classList.add(s); };
+  const idle = () => { scene.classList.remove('relax'); ring.style.transition = 'stroke .3s ease'; setP(0); state(''); msg.textContent = 'Sẵn sàng quét vân tay'; };
+
+  /* ----- Bắn tim/hoa từ nút vân tay lên gần chữ rồi tỏa ra biến mất ----- */
+  const HEARTS = ['♥️', '🌷'];
+  let heartT = 0;
+  function spawnHeart() {
+    const b = btn.getBoundingClientRect(), t = $('.lock-sub').getBoundingClientRect();
+    const s = rand(16, 28), x0 = b.left + b.width / 2 + rand(-b.width * .22, b.width * .22), y0 = b.top + b.height * .15;
+    const tx = rand(t.left + 20, t.right - 20);
+    const dx = Math.max(-b.width * .9, Math.min(b.width * .9, tx - x0)), dy = (t.bottom + 14) - y0;
+    const el = document.createElement('i');
+    el.className = 'lk'; el.textContent = pick(HEARTS);
+    el.style.cssText = `--s:${s}px;--x0:${x0 - s / 2}px;--y0:${y0}px;--dx:${dx}px;--dy:${dy}px;--sx:${rand(-80, 80)}px;--sy:${rand(-60, -15)}px;--t:${rand(1.5, 2.0)}s`;
+    document.body.appendChild(el);
+    el.addEventListener('animationend', () => el.remove(), { once: true });
+  }
+  function startHearts() {
+    stopHearts(); spawnHeart();
+    heartT = setInterval(() => { for (let i = 0; i < (p > .6 ? 3 : 2); i++) spawnHeart(); }, 90);
+  }
+  function stopHearts() { clearInterval(heartT); }
+
+  function down(e) {
+    if (done || holding) return;
+    e.preventDefault();
+    try { btn.setPointerCapture(e.pointerId); } catch {}
+    clearTimeout(resetT); idle();
+    holding = true; scene.classList.add('holding'); t0 = performance.now();
+    msg.textContent = 'Đang quét vân tay… giữ chắc nhé';
+    vib(40);                                              // rung 1 phát khi chạm
+    raf = requestAnimationFrame(tick);
+    startHearts();
+  }
+  function tick(now) {
+    if (!holding) return;
+    const v = Math.min(1, (now - t0) / HOLD);
+    setP(v);
+    if (v >= 1) return success();
+    raf = requestAnimationFrame(tick);
+  }
+  function up() {
+    if (done) { if (pendingOk) { pendingOk = false; vib([70, 50, 160]); } return; }   // trình duyệt chặn rung lúc đang giữ -> rung bù khi nhả
+    if (!holding) return;
+    holding = false; cancelAnimationFrame(raf); scene.classList.remove('holding');
+    fail();
+  }
+  function fail() {
+    stopHearts();
+    state('fail');
+    msg.textContent = '✕ Chưa đạt, hãy giữ lâu hơn và thử lại';
+    vib([130, 70, 130]);                                  // rung khi thất bại
+    ring.style.transition = 'stroke .3s ease, stroke-dashoffset .8s ease';
+    ring.style.strokeDashoffset = C;
+    scene.classList.add('relax'); scene.style.setProperty('--p', 0);   // nền hồng mờ dần về tối
+    resetT = setTimeout(idle, 1700);
+  }
+  async function success() {
+    done = true; holding = false; scene.classList.remove('holding');
+    state('ok'); msg.textContent = '✓ Mở khóa thành công';
+    stopHearts(); for (let i = 0; i < 14; i++) setTimeout(spawnHeart, i * 45);   // tim bắn mạnh khi thành công
+    if (!vib([70, 50, 160])) pendingOk = true;            // rung khi thành công
+    flowerBurst(W / 2, H * .45, 14);
+    await sleep(1000);
+    // Chỉ mờ dần màn khóa (không dùng sương/cánh hoa); lá thư hiện ra ngay bên dưới và bắt đầu hiệu ứng của nó
+    const letter = $('#scene-letter');
+    letter.classList.add('no-enter', 'active');
+    scene.classList.add('fade-out');
+    await sleep(1000);
+    scene.classList.remove('active', 'fade-out');
+    document.body.classList.remove('locked');
+    startLetterExtras();
+    playMusicNow();
+  }
+  btn.addEventListener('pointerdown', down);
+  btn.addEventListener('pointerup', up);
+  btn.addEventListener('pointercancel', up);
+  btn.addEventListener('contextmenu', e => e.preventDefault());
+  idle();
+})();
