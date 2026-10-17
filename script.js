@@ -412,4 +412,49 @@ $('#openBtn').addEventListener('click', () => document.querySelectorAll('.heartf
   document.addEventListener('click', e => { if (!pl.contains(e.target) && !panel.hidden) { panel.hidden = true; fab.setAttribute('aria-expanded', 'false'); } });
 })();
 
+
+/* ========== BỘ ĐẾM LƯỢT TRUY CẬP ==========
+   - Dùng dịch vụ CounterAPI (miễn phí, không cần máy chủ riêng).
+   - Mỗi thiết bị chỉ được tính 1 lần (nhớ bằng localStorage), tải lại trang không tăng thêm.
+   - CHỦ WEB: mở link kèm  ?admin=1  một lần trên mỗi thiết bị của bạn -> thiết bị đó không bao giờ được tính.
+     (muốn tính lại thì mở link kèm  ?admin=0 ) */
+(function visitCounter() {
+  const store = {
+    get: k => { try { return localStorage.getItem(k); } catch { return null; } },
+    set: (k, v) => { try { localStorage.setItem(k, v); } catch {} },
+    del: k => { try { localStorage.removeItem(k); } catch {} }
+  };
+  const q = new URLSearchParams(location.search);
+  if (q.get('admin') === '1') store.set('tl_owner', '1');
+  if (q.get('admin') === '0') store.del('tl_owner');
+  if (IS_DESKTOP) return;                                  // màn hình lớn chỉ hiện mã QR, không tính
+
+  const BASE = 'https://api.counterapi.dev/v1/ktpm68-20-10-2026/luot-ghe-tham';
+  const owner = store.get('tl_owner') === '1';
+  const counted = store.get('tl_counted') === '1';
+  const el = $('#vCount'), box = $('#visits');
+  el.classList.add('load');
+  if (owner) $('#vOwner').hidden = false;
+
+  function show(n) {
+    el.classList.remove('load');
+    if (!Number.isFinite(n)) { el.textContent = store.get('tl_last') || '—'; return; }
+    store.set('tl_last', n.toLocaleString('vi-VN'));
+    const t0 = performance.now(), dur = 1300, from = Math.max(0, n - Math.min(n, 40));
+    (function step(now) {
+      const p = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(from + (n - from) * e).toLocaleString('vi-VN');
+      if (p < 1) requestAnimationFrame(step); else { box.classList.add('pop'); }
+    })(t0);
+  }
+  const countThis = !owner && !counted;                    // chỉ người khác, lần đầu mới +1
+  fetch(countThis ? BASE + '/up' : BASE, { cache: 'no-store' })
+    .then(r => { if (!r.ok) throw 0; return r.json(); })
+    .then(d => {
+      if (countThis) store.set('tl_counted', '1');
+      show(Number(d.count ?? d.Count ?? d.value));
+    })
+    .catch(() => show(NaN));
+})();
+
 fitEnvelope(); layoutFlowers();

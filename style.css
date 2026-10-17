@@ -172,7 +172,7 @@ textarea:focus{border-color:var(--rose);box-shadow:0 0 0 4px rgba(232,82,127,.2)
 /* ================= MÀN HÌNH LỚN: chỉ hiện thông báo + QR ================= */
 .gate{display:none;position:fixed;inset:0;align-items:center;justify-content:center;padding:24px;overflow:auto}
 @media (min-width:1025px) and (hover:hover) and (pointer:fine){
-  .scene,.player,#fx,.veil{display:none!important}
+  .scene,.player,.visits,#fx,.veil{display:none!important}
   .gate{display:flex;animation:sceneIn 1s both}
 }
 .gate-card{position:relative;z-index:2;margin:auto;width:min(94vw,1020px);display:flex;align-items:center;justify-content:center;gap:clamp(28px,5vw,70px);
@@ -298,3 +298,21 @@ textarea:focus{border-color:var(--rose);box-shadow:0 0 0 4px rgba(232,82,127,.2)
 @media (max-width:480px){.wish-text{font-size:16px}.sheet-scroll{padding:26px 20px 46px 46px}}
 
 .bg-photo.soft{filter:none}
+
+/* ================= BỘ ĐẾM LƯỢT TRUY CẬP (góc trên bên trái) ================= */
+.visits{position:fixed;z-index:60;top:max(12px,env(safe-area-inset-top));left:12px;display:flex;align-items:center;gap:8px;
+  padding:5px 14px 5px 6px;border-radius:999px;color:var(--wine);pointer-events:none;
+  background:linear-gradient(135deg,rgba(255,255,255,.95),rgba(255,222,236,.92));
+  box-shadow:0 0 0 2px #fff,0 6px 18px rgba(216,27,96,.38);backdrop-filter:blur(8px);animation:fadeUp .8s ease .4s backwards}
+.v-ico{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:17px;
+  background:linear-gradient(135deg,#ffb3cd,#ff6b9a);box-shadow:inset 0 0 0 2px rgba(255,255,255,.8)}
+.v-ico{animation:spin 8s linear infinite}
+.v-txt{display:flex;flex-direction:column;line-height:1.1}
+.v-txt small{font-size:.62rem;font-weight:600;letter-spacing:.03em;text-transform:uppercase;color:var(--rose-d);opacity:.85}
+.v-txt b{font-family:var(--f-ui);font-weight:700;font-size:1.05rem;font-variant-numeric:tabular-nums;
+  background:linear-gradient(120deg,#e8527f,#b8325d);-webkit-background-clip:text;background-clip:text;color:transparent}
+.v-txt b.load{animation:pulseTxt 1s ease-in-out infinite}
+@keyframes pulseTxt{50%{opacity:.35}}
+.visits.pop{animation:vpop .6s cubic-bezier(.2,.9,.25,1.4)}
+@keyframes vpop{40%{transform:scale(1.08)}}
+.v-owner{font-size:.85rem;margin-left:-2px}
